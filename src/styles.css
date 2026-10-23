@@ -2,6 +2,7 @@
    frame labels, and a pinned story stage beside the chapter copy. Line art is ink;
    the only loud color is the selection blue, the color of "the thing you're working on". */
 :root {
+  color-scheme: light;
   --canvas: #eceef2;
   --canvas-dot: #c2c8d3;
   --veil: rgba(236, 238, 242, 0.82);
@@ -84,39 +85,8 @@
   --dots: radial-gradient(circle at 1px 1px, var(--canvas-dot) 1.1px, transparent 1.6px) 0 0 / 22px 22px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --canvas: #14161b;
-    --canvas-dot: #2c3039;
-    --veil: rgba(20, 22, 27, 0.82);
-    --surface: #1d2027;
-    --ink: #eaedf3;
-    --ink-2: #a2a9b7;
-    --ink-3: #646b79;
-    --hairline: #2e333d;
-    --accent: #7d95ff;
-    --accent-soft: rgba(125, 149, 255, 0.14);
-    --on-accent: #0b0d12;
-    --component: #b48cff;
-    --measure: #ff5e95;
-    --success: #47d19f;
-    --glow: #ffcf47;
-    --world: #3b2a17;
-    --sticky-yellow: #f2c94c;
-    --sticky-pink: #f39bbb;
-    --sticky-green: #8fd6a3;
-    --sticky-lilac: #b9a9f5;
-    --sticky-shadow: rgba(0, 0, 0, 0.45);
-    --role-pm: #e8742a;
-    --role-research: #1aa596;
-    --role-design: #5f7dff;
-    --role-eng: #9067ff;
-    --role-you: #ff4d8f;
-    color-scheme: dark;
-  }
-}
-
-:root[data-theme="dark"] {
+/* Dark theme: only when the visitor turns it on with the switch in the top bar. */
+:root[data-mode="dark"] {
   --canvas: #14161b;
   --canvas-dot: #2c3039;
   --veil: rgba(20, 22, 27, 0.82);
@@ -359,6 +329,61 @@ a {
   padding: 10px 16px;
   border-radius: 999px;
 }
+.theme-switch {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  width: 66px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.theme-switch:hover {
+  border-color: var(--ink-3);
+}
+.theme-switch__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform 0.4s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+:root[data-mode="dark"] .theme-switch__knob {
+  transform: translateX(30px);
+}
+.theme-switch__icon {
+  position: relative;
+  z-index: 1;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: color 0.3s ease;
+}
+:root:not([data-mode="dark"]) .theme-switch__icon--sun,
+:root[data-mode="dark"] .theme-switch__icon--moon {
+  color: var(--canvas);
+}
+
+/* Theme change: a circular reveal from the switch (where supported) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 .topbar__nav .topbar__cta:hover {
   color: var(--canvas);
   background: var(--accent);
@@ -1256,6 +1281,7 @@ a {
   font-family: var(--font-mono);
   color: var(--ink);
   user-select: all;
+  overflow-wrap: anywhere;
 }
 
 .footer {
@@ -1406,6 +1432,8 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .theme-switch__knob,
+  .theme-switch__icon,
   .topbar,
   .cap__card,
   .btn {

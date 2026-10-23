@@ -3,6 +3,7 @@ import { ScrollTrigger, initSmoothScroll, wireAnchorLinks } from './lib/motion';
 import { initHero, initYouCursor } from './hero';
 import { initStory } from './story';
 import { initOutro } from './outro';
+import { initThemeSwitch } from './theme';
 
 /** Wait for web fonts (SVG text is measured), but never longer than a moment. */
 function fontsReady(timeout = 1800): Promise<void> {
@@ -11,6 +12,7 @@ function fontsReady(timeout = 1800): Promise<void> {
 }
 
 async function boot(): Promise<void> {
+  initThemeSwitch();
   initSmoothScroll();
   wireAnchorLinks();
   await fontsReady();

@@ -78,10 +78,10 @@ src/
   strings to use your own product name.
 - **Pacing:** `src/story/timing.ts` sets where each chapter starts. Total scroll length is
   `timeline duration × 11% of the viewport height` (see `unit()` in `story/index.ts`).
-- **Colors and fonts:** all tokens are at the top of `src/styles.css`, with dark-mode values
-  below them. The console and the rugged device use the `--app-*` tokens and `--rugged`.
+- **Colors and fonts:** all tokens are at the top of `src/styles.css`; the dark theme
+  (`:root[data-mode="dark"]`) is right below them. The console and the rugged device use the `--app-*` tokens and `--rugged`.
 - **Characters:** cursor names and their chat lines are in `CAST` in `story/index.ts`.
-- **Contact:** replace `design@example.com` in `index.html`.
+- **Contact:** the team address (`Product_Designers-Global@soti.net`) is in the contact section of `index.html`.
 
 ### Debugging the timeline
 
@@ -99,4 +99,6 @@ scrollTo(0, st.start + (st.end - st.start) * (30 / tl.duration()));
 - `prefers-reduced-motion`: no smooth scrolling, no intro or idle animations, no marquee. The
   story still follows your scroll position exactly, with no easing lag.
 - Without JavaScript the chapters render as a normal readable list.
-- Works in light and dark mode, and down to phone widths (the stage stacks above the text).
+- Opens in the light theme. The sun/moon switch in the top bar turns on the dark theme (with a
+  circular reveal where the browser supports view transitions), and the choice is remembered.
+- Works down to phone widths (the stage stacks above the text).
