@@ -5,20 +5,20 @@
 export const T = {
   spark: 0,
   brainstorm: 10,
-  wireframe: 24.5,
-  hifi: 34,
-  build: 44,
-  impact: 54,
-  end: 65,
+  synthesize: 24.5,
+  prototype: 35,
+  build: 46.5,
+  impact: 57,
+  end: 69,
 } as const;
 
-export type ChapterId = 'spark' | 'brainstorm' | 'wireframe' | 'hifi' | 'build' | 'impact';
+export type ChapterId = 'spark' | 'brainstorm' | 'synthesize' | 'prototype' | 'build' | 'impact';
 
 export const CHAPTERS: { id: ChapterId; label: string }[] = [
   { id: 'spark', label: '01 Spark' },
   { id: 'brainstorm', label: '02 Brainstorm' },
-  { id: 'wireframe', label: '03 Wireframe' },
-  { id: 'hifi', label: '04 High fidelity' },
+  { id: 'synthesize', label: '03 Synthesize with AI' },
+  { id: 'prototype', label: '04 Prototype with AI' },
   { id: 'build', label: '05 Build' },
   { id: 'impact', label: '06 In people’s hands' },
 ];

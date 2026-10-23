@@ -45,6 +45,14 @@
   --app-mint: #c9f1e2;
   --app-coral: #ffd3c4;
   --app-lilac: #e2dcff;
+  --app-side: #10302c;
+  --app-critical: #d13b3f;
+  --app-critical-soft: #fdeeed;
+  --app-success: #138a63;
+  --app-success-soft: #e3f5ec;
+  --app-warn: #d08a12;
+  /* Rugged handheld bumper (safety yellow) */
+  --rugged: #f4b41a;
 
   /* Code editor, always dark. */
   --editor-bg: #0f1218;
@@ -989,6 +997,15 @@ a {
 }
 .stage .glow-stop {
   stop-color: var(--glow);
+}
+.stage .ai-stop-a {
+  stop-color: var(--accent);
+}
+.stage .ai-stop-b {
+  stop-color: var(--component);
+}
+.stage .skel {
+  fill: var(--hairline);
 }
 
 /* ───────────── Sections after the story ───────────── */

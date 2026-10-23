@@ -1,30 +1,37 @@
 import { gsap } from '../../lib/motion';
 import { T } from '../timing';
 import type { Ctx } from '../types';
-import { moveDevice } from './device';
+import { device } from '../rig';
+import { PIN_LOCAL } from './console';
 import { say } from './spark';
 
-/* ── Chapter 5: specs, comments in the file, code that matches the design, and a release. ── */
+/* ── Chapter 5: specs, a question answered in the file, code that matches the prototype,
+   design QA, and a release. ── */
 
 type Tok = [cls: string, text: string];
 const CODE: { indent: number; parts: Tok[] }[] = [
-  { indent: 0, parts: [['ed-key', 'export function '], ['ed-fn', 'SearchBar'], ['ed-dim', '() {']] },
+  { indent: 0, parts: [['ed-key', 'export function '], ['ed-fn', 'FailureGroup'], ['ed-dim', '({ group }) {']] },
   { indent: 1, parts: [['ed-key', 'return'], ['ed-dim', ' (']] },
-  { indent: 2, parts: [['ed-dim', '<'], ['ed-tag', 'Field']] },
-  { indent: 3, parts: [['ed-attr', 'icon'], ['ed-dim', '={<'], ['ed-tag', 'SearchIcon'], ['ed-dim', ' />}']] },
-  { indent: 3, parts: [['ed-attr', 'radius'], ['ed-dim', '='], ['ed-str', '"lg"']] },
-  { indent: 3, parts: [['ed-attr', 'tone'], ['ed-dim', '='], ['ed-str', '"primary"']] },
-  { indent: 3, parts: [['ed-attr', 'placeholder'], ['ed-dim', '='], ['ed-str', '"Search receipts"']] },
+  { indent: 2, parts: [['ed-dim', '<'], ['ed-tag', 'Alert']] },
+  { indent: 3, parts: [['ed-attr', 'tone'], ['ed-dim', '='], ['ed-str', '"critical"']] },
+  { indent: 3, parts: [['ed-attr', 'title'], ['ed-dim', '={group.'], ['ed-fn', 'reason'], ['ed-dim', '}']] },
+  { indent: 3, parts: [['ed-attr', 'count'], ['ed-dim', '={group.'], ['ed-fn', 'devices'], ['ed-dim', '}']] },
+  { indent: 3, parts: [['ed-attr', 'onFix'], ['ed-dim', '={'], ['ed-fn', 'retryInBatches'], ['ed-dim', '(50)}']] },
   { indent: 2, parts: [['ed-dim', '/>']] },
   { indent: 1, parts: [['ed-dim', ');']] },
   { indent: 0, parts: [['ed-dim', '}']] },
 ];
 
-const ED = { x: 620, y: 214, w: 440, h: 364 };
+/** Where the console sits during this chapter */
+export const BUILD_DEVICE = { x: 360, y: 300, s: 0.66 };
+
+const ED = { x: 640, y: 214, w: 440, h: 364 };
 const CODE_X = ED.x + 46;
 const CODE_Y = ED.y + 70;
 const LH = 28;
 const INDENT = 18;
+const QA = { x: 122, y: 474, w: 476, h: 204 };
+const CHECKS = ['Matches the prototype', 'Contrast passes WCAG AA', 'Keyboard and screen reader tested', 'Error copy reviewed with support'];
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -39,28 +46,30 @@ const codeSvg = CODE.map((line, i) => {
       .join('')}</text>`;
 }).join('');
 
+const pinStage = { x: BUILD_DEVICE.x + PIN_LOCAL.x * BUILD_DEVICE.s, y: BUILD_DEVICE.y + PIN_LOCAL.y * BUILD_DEVICE.s };
+
 const TOKENS = [
-  { id: 'tok-radius', label: '◇ radius.lg', from: [380 + 40, 229], to: [CODE_X + 3 * INDENT + 150, CODE_Y + 4 * LH - 6] },
-  { id: 'tok-color', label: '◇ color.primary', from: [380 - 60, 372], to: [CODE_X + 3 * INDENT + 140, CODE_Y + 5 * LH - 6] },
-  { id: 'tok-space', label: '◇ space.4', from: [380 - 120, 229], to: [CODE_X + 3 * INDENT + 240, CODE_Y + 6 * LH - 6] },
+  { id: 'tok-radius', label: '◇ radius.md', from: [200, 330], to: [CODE_X + 2 * INDENT + 90, CODE_Y + 2 * LH - 6] },
+  { id: 'tok-color', label: '◇ color.critical', from: [300, 312], to: [CODE_X + 3 * INDENT + 150, CODE_Y + 3 * LH - 6] },
+  { id: 'tok-space', label: '◇ space.3', from: [250, 360], to: [CODE_X + 3 * INDENT + 210, CODE_Y + 5 * LH - 6] },
 ];
 
 export const buildSvg = /* svg */ `
 <g id="build">
-  <path id="comment-lead" class="ln-2" d="M502 204 C540 196 578 170 612 152" stroke-dasharray="3 5" style="stroke-width:1.6"/>
+  <path id="comment-lead" class="ln-2" d="M${pinStage.x + 10} ${pinStage.y - 10} C${pinStage.x + 30} ${pinStage.y - 60} ${ED.x - 30} 160 ${ED.x} 148" stroke-dasharray="3 5" style="stroke-width:1.6"/>
   <g id="comment">
-    <rect class="card" x="612" y="88" width="320" height="112" rx="14" style="stroke-width:1.6"/>
+    <rect class="card" x="${ED.x}" y="74" width="352" height="116" rx="14" style="stroke-width:1.6"/>
     <g id="comment-q">
-      <circle cx="636" cy="118" r="12" style="fill:var(--role-eng)"/>
-      <text x="636" y="122.5" text-anchor="middle" style="font:700 12px var(--font-body);fill:var(--on-role)">E</text>
-      <text class="t-ui" x="656" y="114" style="font-size:13px;font-weight:700">Engineer</text>
-      <text class="t-ui" x="656" y="133" style="font-size:14px;fill:var(--ink-2)">Search radius: 20 or 24?</text>
+      <circle cx="${ED.x + 24}" cy="104" r="12" style="fill:var(--role-eng)"/>
+      <text x="${ED.x + 24}" y="108.5" text-anchor="middle" style="font:700 12px var(--font-body);fill:var(--on-role)">E</text>
+      <text class="t-ui" x="${ED.x + 44}" y="100" style="font-size:13px;font-weight:700">Engineer</text>
+      <text class="t-ui" x="${ED.x + 44}" y="119" style="font-size:14px;fill:var(--ink-2)">Retry all 298 at once, or in batches?</text>
     </g>
     <g id="comment-a">
-      <circle cx="636" cy="166" r="12" style="fill:var(--role-design)"/>
-      <text x="636" y="170.5" text-anchor="middle" style="font:700 12px var(--font-body);fill:var(--on-role)">D</text>
-      <text class="t-ui" x="656" y="162" style="font-size:13px;font-weight:700">Designer</text>
-      <text class="t-ui" x="656" y="181" style="font-size:14px;fill:var(--ink-2)">24. It’s the radius.lg token.</text>
+      <circle cx="${ED.x + 24}" cy="154" r="12" style="fill:var(--role-design)"/>
+      <text x="${ED.x + 24}" y="158.5" text-anchor="middle" style="font:700 12px var(--font-body);fill:var(--on-role)">D</text>
+      <text class="t-ui" x="${ED.x + 44}" y="150" style="font-size:13px;font-weight:700">Designer</text>
+      <text class="t-ui" x="${ED.x + 44}" y="169" style="font-size:14px;fill:var(--ink-2)">Batches of 50, with progress per site.</text>
     </g>
   </g>
 
@@ -70,10 +79,28 @@ export const buildSvg = /* svg */ `
     <circle cx="${ED.x + 22}" cy="${ED.y + 20}" r="5.5" style="fill:#ff5f57"/>
     <circle cx="${ED.x + 40}" cy="${ED.y + 20}" r="5.5" style="fill:#febc2e"/>
     <circle cx="${ED.x + 58}" cy="${ED.y + 20}" r="5.5" style="fill:#28c840"/>
-    <text class="ed-code" x="${ED.x + 84}" y="${ED.y + 25}" style="font-size:12.5px;fill:var(--editor-text)">SearchBar.tsx</text>
+    <text class="ed-code" x="${ED.x + 84}" y="${ED.y + 25}" style="font-size:12.5px;fill:var(--editor-text)">FailureGroup.tsx</text>
     <text class="ed-code ed-dim" x="${ED.x + ED.w - 18}" y="${ED.y + 25}" text-anchor="end" style="font-size:12px">main</text>
     ${codeSvg}
     <rect id="caret" x="0" y="0" width="2" height="19" style="fill:var(--editor-fn)"/>
+  </g>
+
+  <g id="qa">
+    <rect class="card" x="${QA.x}" y="${QA.y}" width="${QA.w}" height="${QA.h}" rx="14" style="stroke-width:1.6"/>
+    <text class="t-label" x="${QA.x + 22}" y="${QA.y + 32}">DESIGN QA</text>
+    <text class="t-mono" id="qa-count" x="${QA.x + QA.w - 22}" y="${QA.y + 32}" text-anchor="end" style="font-size:12px;fill:var(--ink-2)">0 / 4</text>
+    ${CHECKS.map((c, i) => {
+      const y = QA.y + 72 + i * 34;
+      return `
+    <g class="qa-row" id="qa-${i}">
+      <rect x="${QA.x + 22}" y="${y - 15}" width="20" height="20" rx="5" class="fill-surface" style="stroke:var(--ink-3);stroke-width:1.6"/>
+      <g class="qa-check">
+        <rect x="${QA.x + 22}" y="${y - 15}" width="20" height="20" rx="5" style="fill:var(--success)"/>
+        <path d="M${QA.x + 27} ${y - 5} l3.5 3.5 l6.5 -7" style="fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"/>
+      </g>
+      <text class="t-ui" x="${QA.x + 54}" y="${y + 1}" style="font-size:15px">${c}</text>
+    </g>`;
+    }).join('')}
   </g>
 
   <g id="tokens">
@@ -89,15 +116,15 @@ export const buildSvg = /* svg */ `
   </g>
 
   <g id="release">
-    <text class="t-label" id="rel-label" x="620" y="612" style="letter-spacing:0.04em">SHIPPING v4.2</text>
-    <text class="t-label" id="rel-pct" x="1060" y="612" text-anchor="end" style="letter-spacing:0.04em">0%</text>
-    <rect class="fill-hair" x="620" y="624" width="440" height="8" rx="4"/>
-    <rect class="fill-accent" id="rel-fill" x="620" y="624" width="0" height="8" rx="4"/>
+    <text class="t-label" x="${ED.x}" y="612" style="letter-spacing:0.04em">ROLLING OUT v24.3</text>
+    <text class="t-label" id="rel-pct" x="${ED.x + ED.w}" y="612" text-anchor="end" style="letter-spacing:0.04em">0%</text>
+    <rect class="fill-hair" x="${ED.x}" y="624" width="${ED.w}" height="8" rx="4"/>
+    <rect class="fill-accent" id="rel-fill" x="${ED.x}" y="624" width="0" height="8" rx="4"/>
     <g id="rel-badge">
-      <rect x="620" y="648" width="236" height="34" rx="17" style="fill:var(--success)"/>
-      <circle cx="640" cy="665" r="9" style="fill:#fff"/>
-      <path d="M635.5 665 l3 3 l6 -6.5" style="fill:none;stroke:var(--success);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"/>
-      <text x="656" y="670" style="font:600 13.5px var(--font-body);fill:#fff">Live for 100% of users</text>
+      <rect x="${ED.x}" y="648" width="236" height="34" rx="17" style="fill:var(--success)"/>
+      <circle cx="${ED.x + 20}" cy="665" r="9" style="fill:#fff"/>
+      <path d="M${ED.x + 15.5} 665 l3 3 l6 -6.5" style="fill:none;stroke:var(--success);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"/>
+      <text x="${ED.x + 36}" y="670" style="font:600 13.5px var(--font-body);fill:#fff">Live for every customer</text>
     </g>
   </g>
 </g>`;
@@ -107,7 +134,7 @@ export function animateBuild(ctx: Ctx): void {
   const t = T.build;
 
   gsap.set(q('#comment-lead'), { drawSVG: '0%' });
-  gsap.set([q('#comment'), q('#comment-q'), q('#comment-a')], { autoAlpha: 0 });
+  gsap.set([q('#comment'), q('#comment-q'), q('#comment-a'), q('#qa'), ...qa('.qa-check')], { autoAlpha: 0 });
   gsap.set(q('#editor'), { autoAlpha: 0, scale: 0.94, transformOrigin: '50% 0%' });
   gsap.set(q('#caret'), { autoAlpha: 0 });
   gsap.set(qa('.token'), { autoAlpha: 0 });
@@ -118,13 +145,13 @@ export function animateBuild(ctx: Ctx): void {
     gsap.set(r.querySelector('.rl-tag'), { autoAlpha: 0, scale: 0.6, transformOrigin: '50% 50%' });
   });
 
-  // Make room: design system out, phone to the left, engineer in
-  tl.to(qa('.ds-card'), { autoAlpha: 0, y: -12, duration: 0.45, stagger: 0.05 }, t);
-  moveDevice(ctx, t + 0.3, { x: 380 }, 1.1);
+  // Make room: the prototype becomes the spec, the engineer joins
+  tl.to([q('#prompt'), q('#proto-test')], { autoAlpha: 0, duration: 0.45, stagger: 0.05 }, t);
+  tl.to(device, { ...BUILD_DEVICE, duration: 1.1, ease: 'power3.inOut' }, t + 0.3);
   tl.to(q('#cur-eng'), { x: 1080, y: 300, duration: 1, ease: 'power3.out' }, t + 0.6);
   tl.to(q('#cur-pm'), { x: 1180, y: 40, duration: 0.8 }, t + 0.2);
-  tl.to(q('#cur-research'), { x: 120, y: 680, duration: 0.8 }, t + 0.2);
-  tl.to(q('#cur-design'), { x: 170, y: 300, duration: 0.9 }, t + 0.3);
+  tl.to(q('#cur-research'), { x: 96, y: 700, duration: 0.8 }, t + 0.2);
+  tl.to(q('#cur-design'), { x: 560, y: 470, duration: 0.9 }, t + 0.3);
 
   // Redlines
   tl.set(q('#redlines'), { autoAlpha: 1 }, t + 1.3);
@@ -146,12 +173,13 @@ export function animateBuild(ctx: Ctx): void {
     const y0 = Number(line.getAttribute('y'));
     const len = line.getComputedTextLength();
     const dur = Math.max(0.12, len / 700);
+    const steps = `steps(${Math.max(2, Math.round(len / 9))})`;
     tl.set(q('#caret'), { attr: { x: x0, y: y0 - 15 } }, at);
-    tl.to(clip, { attr: { width: len + 4 }, duration: dur, ease: 'steps(' + Math.max(2, Math.round(len / 9)) + ')' }, at);
-    tl.to(q('#caret'), { attr: { x: x0 + len + 2 }, duration: dur, ease: 'steps(' + Math.max(2, Math.round(len / 9)) + ')' }, at);
+    tl.to(clip, { attr: { width: len + 4 }, duration: dur, ease: steps }, at);
+    tl.to(q('#caret'), { attr: { x: x0 + len + 2 }, duration: dur, ease: steps }, at);
     at += dur + 0.06;
   });
-  tl.to(q('#cur-eng'), { x: 1010, y: 520, duration: 0.8 }, e0 + 0.4);
+  tl.to(q('#cur-eng'), { x: 990, y: 552, duration: 0.8 }, e0 + 0.4);
 
   // A question in the file, answered in the file
   const c0 = t + 2.6;
@@ -160,7 +188,7 @@ export function animateBuild(ctx: Ctx): void {
   tl.to(q('#comment-lead'), { drawSVG: '100%', duration: 0.4, ease: 'none' }, c0 + 0.3);
   tl.to(q('#comment'), { autoAlpha: 1, duration: 0.3 }, c0 + 0.5);
   tl.to(q('#comment-q'), { autoAlpha: 1, duration: 0.3 }, c0 + 0.6);
-  tl.to(q('#cur-design'), { x: 944, y: 150, duration: 0.8 }, c0 + 0.9);
+  tl.to(q('#cur-design'), { x: ED.x + 320, y: 176, duration: 0.8 }, c0 + 0.9);
   tl.to(q('#comment-a'), { autoAlpha: 1, duration: 0.3 }, c0 + 1.6);
 
   // Tokens fly from the design into the code
@@ -175,17 +203,35 @@ export function animateBuild(ctx: Ctx): void {
     tl.to(el, { autoAlpha: 0, scale: 0.6, duration: 0.2 }, s + 0.85);
   });
 
+  // Design QA, row by row
+  const qaCount = q<SVGTextElement>('#qa-count');
+  const q0 = c0 + 2.2;
+  tl.to(q('#qa'), { autoAlpha: 1, duration: 0.4 }, q0);
+  tl.to(q('#cur-design'), { x: QA.x + 40, y: QA.y + 74, duration: 0.6 }, q0);
+  qa('.qa-check').forEach((chk, i) => {
+    const ati = q0 + 0.7 + i * 0.35;
+    tl.to(q('#cur-design'), { y: QA.y + 74 + i * 34, duration: 0.2 }, ati - 0.15);
+    tl.to(chk, { autoAlpha: 1, duration: 0.15 }, ati);
+    tl.from(chk, { scale: 0.4, transformOrigin: '50% 50%', duration: 0.25, ease: 'back.out(3)', immediateRender: false }, ati);
+  });
+  tl.to(q('#cur-design'), { x: 610, y: 712, duration: 0.6 }, q0 + 0.7 + CHECKS.length * 0.35);
+  ctx.onRender(() => {
+    const n = qa('.qa-check').filter((c) => Number(gsap.getProperty(c, 'opacity')) > 0.5).length;
+    const v = `${n} / 4`;
+    if (qaCount.textContent !== v) qaCount.textContent = v;
+  });
+
   // Ship it
-  const r0 = k0 + 1.6;
+  const r0 = Math.max(k0 + 1.6, q0 + 2.2);
   const pct = q<SVGTextElement>('#rel-pct');
   const fill = q('#rel-fill');
   tl.to(q('#release'), { autoAlpha: 1, duration: 0.3 }, r0);
-  tl.to(fill, { attr: { width: 440 }, duration: 1.6, ease: 'power2.inOut' }, r0 + 0.2);
+  tl.to(fill, { attr: { width: ED.w }, duration: 1.6, ease: 'power2.inOut' }, r0 + 0.2);
   ctx.onRender(() => {
-    const v = `${Math.round((Number(fill.getAttribute('width')) / 440) * 100)}%`;
+    const v = `${Math.round((Number(fill.getAttribute('width')) / ED.w) * 100)}%`;
     if (pct.textContent !== v) pct.textContent = v;
   });
   tl.to(q('#rel-badge'), { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, r0 + 1.85);
-  tl.to(q('#cur-eng'), { x: 900, y: 662, duration: 0.6 }, r0 + 1.5);
+  tl.to(q('#cur-eng'), { x: 940, y: 662, duration: 0.6 }, r0 + 1.5);
   say(ctx, '#chat-eng-1', r0 + 2.0, 1.4);
 }

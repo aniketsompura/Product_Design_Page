@@ -2,7 +2,11 @@
  * Plain objects tweened by the timeline. They are applied as SVG transform attributes on every
  * render, which keeps nested translate/scale math predictable.
  */
-export const device = { x: 600, y: 400, s: 1 };
+
+/** The prototype frame (a desktop console). Local coordinates are centered on (0, 0). */
+export const FRAME = { w: 720, h: 450, rx: 14, cx: 600, cy: 372, realW: 1440, realH: 900 } as const;
+
+export const device = { x: FRAME.cx, y: FRAME.cy, s: 1 };
 export const camera = { cx: 600, cy: 400, s: 1 };
 
 export function applyRig(deviceEl: SVGGElement, cameraEl: SVGGElement, zoomLabel: HTMLElement | null): void {

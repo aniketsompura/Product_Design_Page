@@ -6,9 +6,11 @@ import { cursor, fitPills } from './svg';
 import { applyRig } from './rig';
 import { sparkSvg, animateSpark } from './scenes/spark';
 import { boardSvg, selSvg, animateBrainstorm } from './scenes/brainstorm';
-import { deviceSvg, dsSvg, wireNotesSvg, animateWireframe, animateHifi } from './scenes/device';
+import { synthSvg, animateSynthesize } from './scenes/synthesize';
+import { consoleSvg } from './scenes/console';
+import { promptSvg, animatePrototype } from './scenes/prototype';
 import { buildSvg, animateBuild } from './scenes/build';
-import { handBackSvg, handFrontSvg, impactSvg, animateImpact } from './scenes/impact';
+import { workerSvg, impactSvg, animateImpact } from './scenes/impact';
 
 const DEFS = /* svg */ `
 <defs>
@@ -17,27 +19,40 @@ const DEFS = /* svg */ `
     <stop offset="0.45" class="glow-stop" stop-opacity="0.4"/>
     <stop offset="1" class="glow-stop" stop-opacity="0"/>
   </radialGradient>
+  <linearGradient id="g-ai" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" class="ai-stop-a"/>
+    <stop offset="1" class="ai-stop-b"/>
+  </linearGradient>
+  <linearGradient id="g-ai-bar" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" class="ai-stop-a"/>
+    <stop offset="1" class="ai-stop-b"/>
+  </linearGradient>
+  <linearGradient id="g-ai-v" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+    <stop offset="0" class="ai-stop-a"/>
+    <stop offset="1" class="ai-stop-b"/>
+  </linearGradient>
 </defs>`;
 
 const CAST = [
   cursor('research', 'Researcher', [
     { id: 'chat-research-1', text: '40+ tickets this week' },
-    { id: 'chat-research-2', text: 'Users asked for search!' },
+    { id: 'chat-research-2', text: 'Admins asked for this!' },
+    { id: 'chat-research-3', text: 'Matches my interview notes' },
   ]),
   cursor('pm', 'Product manager', [
     { id: 'chat-pm-1', text: 'It’s on our Q3 roadmap', left: true },
-    { id: 'chat-pm-2', text: 'Love the filter chips' },
+    { id: 'chat-pm-2', text: 'Wait, no wireframes?' },
   ]),
   cursor('eng', 'Engineer', [{ id: 'chat-eng-1', text: 'Merged. Shipping today!', left: true }]),
   cursor('design', 'Designer', [
-    { id: 'chat-design-1', text: '6 taps? Let’s fix that.', left: true },
+    { id: 'chat-design-1', text: '14 steps? Let’s fix that.', left: true },
     { id: 'chat-design-2', text: 'Ideas, everyone. Go wild.', left: true },
-    { id: 'chat-design-3', text: 'Now, the fun part' },
+    { id: 'chat-design-4', text: 'Straight to a prototype.' },
   ]),
 ].join('');
 
 const VIEWBOX_WIDE = '80 40 1050 750';
-const VIEWBOX_NARROW = '110 40 990 760';
+const VIEWBOX_NARROW = '96 40 1036 760';
 
 export function initStory(): void {
   const section = document.querySelector<HTMLElement>('#process');
@@ -51,11 +66,10 @@ export function initStory(): void {
     `<g id="camera">` +
     boardSvg +
     sparkSvg +
-    dsSvg +
-    wireNotesSvg +
-    handBackSvg +
-    deviceSvg +
-    handFrontSvg +
+    synthSvg +
+    promptSvg +
+    consoleSvg +
+    workerSvg +
     selSvg +
     buildSvg +
     impactSvg +
@@ -90,8 +104,8 @@ export function initStory(): void {
 
   animateSpark(ctx);
   animateBrainstorm(ctx);
-  animateWireframe(ctx);
-  animateHifi(ctx);
+  animateSynthesize(ctx);
+  animatePrototype(ctx);
   animateBuild(ctx);
   animateImpact(ctx, world);
   animateChapterCopy(tl, pin);

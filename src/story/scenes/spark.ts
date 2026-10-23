@@ -3,7 +3,7 @@ import { T } from '../timing';
 import type { Ctx } from '../types';
 import { handLoop } from '../svg';
 
-/* ── Chapter 1: signals from users, data, the roadmap and a design audit converge into a lightbulb. ── */
+/* ── Chapter 1: an IT admin's ticket, a dip in enrollment, the roadmap and a design audit converge into a lightbulb. ── */
 
 export const BULB_GLASS =
   'M556 410 C556 372 500 352 500 285 C500 230 545 185 600 185 C655 185 700 230 700 285 C700 352 644 372 644 410';
@@ -44,20 +44,20 @@ export const sparkSvg = /* svg */ `
   </g>
 
   <g id="sig-feedback" class="sig">
-    <text class="t-label" x="160" y="98">USER FEEDBACK</text>
+    <text class="t-label" x="160" y="98">IT ADMIN TICKET</text>
     <path class="card" d="M176 112 H424 Q440 112 440 128 V190 Q440 206 424 206 H414 L432 232 L392 206 H176 Q160 206 160 190 V128 Q160 112 176 112 Z"/>
-    <text class="t-hand" x="182" y="152" style="font-size:29px">Ugh. Where did</text>
-    <text class="t-hand" x="182" y="185" style="font-size:29px">my receipt go?!</text>
+    <text class="t-hand" x="182" y="152" style="font-size:29px">312 devices stuck on</text>
+    <text class="t-hand" x="182" y="185" style="font-size:29px">“Enrolling…” again?!</text>
   </g>
 
   <g id="sig-analytics" class="sig">
-    <text class="t-label" x="150" y="456">SEARCH SUCCESS RATE</text>
+    <text class="t-label" x="150" y="456">FIRST-TRY ENROLLMENT</text>
     <rect class="card" x="150" y="470" width="290" height="190" rx="14"/>
     <path class="ln-soft" d="M178 500 V634 H418"/>
     <path class="ln-soft" d="M182 534 H414 M182 584 H414" stroke-dasharray="3 6" style="stroke-width:1.2"/>
     <path class="ln" id="dip-line" d="M182 530 C220 526 248 532 276 540 C300 548 312 610 336 612 C360 614 372 592 414 596"/>
     <path class="ln-accent" id="dip-loop" d="${DIP_LOOP}"/>
-    <text class="t-hand is-accent" id="dip-note" x="238" y="618" text-anchor="middle" style="font-size:32px">−32%</text>
+    <text class="t-hand is-accent" id="dip-note" x="238" y="618" text-anchor="middle" style="font-size:32px">−27%</text>
   </g>
 
   <g id="sig-roadmap" class="sig">
@@ -69,7 +69,7 @@ export const sparkSvg = /* svg */ `
     <rect class="fill-hair" x="830" y="178" width="150" height="8" rx="4"/>
     <rect class="ln-2" x="802" y="208" width="16" height="16" rx="4"/>
     <rect class="s-yellow" id="roadmap-hl" x="826" y="203" width="160" height="26" rx="4"/>
-    <text class="t-ui" x="834" y="221.5" style="font-size:15px;font-weight:600;fill:var(--sticky-ink)">Receipts revamp</text>
+    <text class="t-ui" x="834" y="221.5" style="font-size:15px;font-weight:600;fill:var(--sticky-ink)">Enrollment revamp</text>
     <rect class="ln-2" x="802" y="242" width="16" height="16" rx="4"/>
     <rect class="fill-hair" x="830" y="246" width="118" height="8" rx="4"/>
     <rect class="ln-2" x="802" y="270" width="16" height="16" rx="4"/>
@@ -85,9 +85,10 @@ export const sparkSvg = /* svg */ `
       <circle cx="818" cy="522" r="5"/><circle cx="846" cy="540" r="5"/><circle cx="820" cy="560" r="5"/>
       <circle cx="848" cy="578" r="5"/><circle cx="822" cy="598" r="5"/><circle cx="842" cy="614" r="5"/>
     </g>
-    <text class="t-hand" x="884" y="548" style="font-size:29px">6 taps to find</text>
-    <text class="t-hand" x="884" y="582" style="font-size:29px">one receipt.</text>
-    <path class="ln-measure" id="audit-underline" d="M884 556 C920 552 960 553 1000 556" style="stroke-width:2.5"/>
+    <text class="t-hand" x="882" y="532" style="font-size:28px">14 steps</text>
+    <text class="t-hand" x="882" y="564" style="font-size:28px">to enroll</text>
+    <text class="t-hand" x="882" y="596" style="font-size:28px">one device.</text>
+    <path class="ln-measure" id="audit-underline" d="M882 540 C906 537 940 538 966 541" style="stroke-width:2.5"/>
   </g>
 
   <g id="pulses" class="fill-accent">

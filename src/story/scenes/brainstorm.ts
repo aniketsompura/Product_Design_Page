@@ -3,9 +3,9 @@ import { T } from '../timing';
 import type { Ctx } from '../types';
 import { handLoop, sticky, squiggle } from '../svg';
 import { say } from './spark';
-import { camera } from '../rig';
+import { camera, FRAME } from '../rig';
 
-/* ── Chapter 2: a whiteboard fills with sticky notes, which get clustered, voted on, and one wins. ── */
+/* ── Chapter 2: a whiteboard fills with sticky notes about enrollment, which get clustered, voted on, and one wins. ── */
 
 type Color = 'yellow' | 'pink' | 'green' | 'lilac';
 interface Note {
@@ -16,26 +16,26 @@ interface Note {
   votes?: ('design' | 'pm' | 'research' | 'eng')[];
 }
 
-const CL = { find: 300, tidy: 600, share: 900 } as const;
+const CL = { diagnose: 300, setup: 600, scale: 900 } as const;
 const CY = 452;
 const OFF = 54;
 
 export const NOTES: Note[] = [
-  // Find it
-  { lines: ['Smart', 'search'], color: 'yellow', scatter: [262, 268, -6], cluster: [CL.find - OFF, CY - OFF, 0], votes: ['design', 'pm', 'research', 'eng'] },
-  { lines: ['Filter by', 'store'], color: 'pink', scatter: [930, 560, 4], cluster: [CL.find + OFF, CY - OFF, 3] },
-  { lines: ['Scan &', 'auto-tag'], color: 'green', scatter: [612, 262, -3], cluster: [CL.find - OFF, CY + OFF, -2], votes: ['research'] },
-  { lines: ['Newest', 'first'], color: 'lilac', scatter: [394, 556, 5], cluster: [CL.find + OFF, CY + OFF, 4] },
-  // Keep it tidy
-  { lines: ['Auto', 'folders'], color: 'yellow', scatter: [790, 300, 5], cluster: [CL.tidy - OFF, CY - OFF, -3], votes: ['pm', 'design'] },
-  { lines: ['Sort by', 'month'], color: 'lilac', scatter: [208, 470, 3], cluster: [CL.tidy + OFF, CY - OFF, 2] },
-  { lines: ['Pin', 'favorites'], color: 'pink', scatter: [560, 470, 6], cluster: [CL.tidy - OFF, CY + OFF, 3] },
-  { lines: ['Archive', 'old ones'], color: 'green', scatter: [1004, 300, -4], cluster: [CL.tidy + OFF, CY + OFF, -4] },
-  // Share it
-  { lines: ['Export', 'to PDF'], color: 'green', scatter: [430, 330, -2], cluster: [CL.share - OFF, CY - OFF, 2], votes: ['eng'] },
-  { lines: ['Send to', 'accountant'], color: 'yellow', scatter: [740, 540, -5], cluster: [CL.share + OFF, CY - OFF, -3] },
-  { lines: ['Split with', 'friends'], color: 'pink', scatter: [236, 614, 2], cluster: [CL.share - OFF, CY + OFF, -2] },
-  { lines: ['Email', 'forward'], color: 'lilac', scatter: [1000, 470, 3], cluster: [CL.share + OFF, CY + OFF, 3] },
+  // Diagnose
+  { lines: ['One-click', 'fixes'], color: 'yellow', scatter: [262, 268, -6], cluster: [CL.diagnose - OFF, CY - OFF, 0], votes: ['design', 'pm', 'research', 'eng'] },
+  { lines: ['Clear', 'errors'], color: 'pink', scatter: [930, 560, 4], cluster: [CL.diagnose + OFF, CY - OFF, 3], votes: ['research'] },
+  { lines: ['Live', 'status'], color: 'green', scatter: [612, 262, -3], cluster: [CL.diagnose - OFF, CY + OFF, -2] },
+  { lines: ['Auto', 'retry'], color: 'lilac', scatter: [394, 556, 5], cluster: [CL.diagnose + OFF, CY + OFF, 4] },
+  // Set up
+  { lines: ['Guided', 'setup'], color: 'yellow', scatter: [790, 300, 5], cluster: [CL.setup - OFF, CY - OFF, -3], votes: ['pm', 'design'] },
+  { lines: ['QR code', 'per site'], color: 'lilac', scatter: [208, 470, 3], cluster: [CL.setup + OFF, CY - OFF, 2] },
+  { lines: ['Cert', 'pre-check'], color: 'pink', scatter: [560, 470, 6], cluster: [CL.setup - OFF, CY + OFF, 3] },
+  { lines: ['Bulk CSV', 'import'], color: 'green', scatter: [1004, 300, -4], cluster: [CL.setup + OFF, CY + OFF, -4] },
+  // Scale
+  { lines: ['Zero-', 'touch'], color: 'green', scatter: [430, 330, -2], cluster: [CL.scale - OFF, CY - OFF, 2], votes: ['eng'] },
+  { lines: ['Enroll', 'templates'], color: 'yellow', scatter: [740, 540, -5], cluster: [CL.scale + OFF, CY - OFF, -3] },
+  { lines: ['Staging', 'profiles'], color: 'pink', scatter: [236, 614, 2], cluster: [CL.scale - OFF, CY + OFF, -2] },
+  { lines: ['Progress', 'by site'], color: 'lilac', scatter: [1000, 470, 3], cluster: [CL.scale + OFF, CY + OFF, 3] },
 ];
 
 const PLACERS = ['design', 'pm', 'research'] as const;
@@ -44,9 +44,9 @@ const voteDots = (votes: Note['votes'] = []) =>
   votes.map((role, i) => `<circle class="vote vote--${role}" cx="${34 - i * 15}" cy="-32" r="7"/>`).join('');
 
 const LABELS = [
-  { x: CL.find, text: 'Find it' },
-  { x: CL.tidy, text: 'Keep it tidy' },
-  { x: CL.share, text: 'Share it' },
+  { x: CL.diagnose, text: 'Diagnose' },
+  { x: CL.setup, text: 'Set up' },
+  { x: CL.scale, text: 'Scale' },
 ];
 
 export const boardSvg = /* svg */ `
@@ -61,9 +61,9 @@ export const boardSvg = /* svg */ `
   </g>
   <defs><clipPath id="hmw-clip"><rect id="hmw-clip-rect" x="250" y="110" width="0" height="70"/></clipPath></defs>
   <g clip-path="url(#hmw-clip)">
-    <text class="t-hand" x="256" y="160" style="font-size:38px">How might we help people find any receipt in seconds?</text>
+    <text class="t-hand" x="256" y="160" style="font-size:38px">How might we get every device enrolled on the first try?</text>
   </g>
-  <path id="hmw-underline" class="ln-accent" d="${squiggle(796, 1040, 176, 3.5, 8)}"/>
+  <path id="hmw-underline" class="ln-accent" d="${squiggle(866, 1052, 176, 3.5, 6)}"/>
 
   <g id="cluster-labels">
     ${LABELS.map((l, i) => `<text class="t-hand cluster-label" id="cl-label-${i}" x="${l.x}" y="${CY - 120}" text-anchor="middle" style="font-size:32px">${l.text}</text>`).join('')}
@@ -88,9 +88,6 @@ export const selSvg = /* svg */ `
   <text class="sel__dims" id="sel-dims" text-anchor="middle">96 × 96</text>
 </g>`;
 
-/** The winning sticky gets resized into the phone frame, so the selection box follows it. */
-const PHONE = { w: 300, h: 600, rx: 40 };
-const REAL = { w: 393, h: 852 }; // what the dimension tag reads once it's a phone frame
 
 export function animateBrainstorm(ctx: Ctx): void {
   const { tl, q, qa } = ctx;
@@ -187,28 +184,8 @@ export function animateBrainstorm(ctx: Ctx): void {
   tl.to(q('#cur-research'), { x: 380, y: 610, duration: 0.6 }, winAt);
   tl.to(q('#cur-pm'), { x: 760, y: 610, duration: 0.6 }, winAt);
 
-  // ── Transition: the winner is resized into a phone frame (handled here because the sticky owns it)
-  const m = T.wireframe - 0.5; // morph start ≈ 24
-  tl.to([...notes.slice(1), ...qa('.cluster-label'), ...qa('.lasso'), q('#board-tray')], { autoAlpha: 0, duration: 0.5, stagger: 0.015 }, m);
-  tl.to(q('#board-frame'), { autoAlpha: 0, duration: 0.6 }, m + 0.2);
-  tl.to(q('#hmw-clip-rect'), { attr: { width: 0 }, duration: 0.5, ease: 'power2.in' }, m);
-  tl.to(q('#hmw-underline'), { autoAlpha: 0, duration: 0.3 }, m);
-  tl.to(q('#bulb'), { autoAlpha: 0, duration: 0.4 }, m);
-  tl.to([q('#cur-pm'), q('#cur-research')], { x: (i: number) => (i === 0 ? 1080 : 140), y: (i: number) => (i === 0 ? 180 : 620), duration: 0.8 }, m);
-
-  tl.to(camera, { s: 1, cx: 600, cy: 400, duration: 1.2, ease: 'power2.inOut' }, m + 0.1);
-  tl.to(winner, { x: 600, y: 400, rotation: 0, duration: 0.8, ease: 'power3.inOut' }, m + 0.2);
-  tl.to(q('#cur-design'), { x: 648, y: 448, duration: 0.8, ease: 'power3.inOut' }, m + 0.2);
-  tl.to(winner.querySelectorAll('text, .votes, .sticky__strip, .sticky__shadow'), { autoAlpha: 0, duration: 0.3 }, m + 0.8);
-
-  // Resize by the corner handle
-  const rs = m + 1.1;
-  tl.to(winnerPaper, { attr: { x: -PHONE.w / 2, y: -PHONE.h / 2, width: PHONE.w, height: PHONE.h, rx: PHONE.rx }, duration: 1.3, ease: 'power3.inOut' }, rs);
-  tl.to(q('#cur-design'), { x: 600 + PHONE.w / 2, y: 400 + PHONE.h / 2, duration: 1.3, ease: 'power3.inOut' }, rs);
-  tl.to(winnerPaper, { opacity: 0, duration: 0.4 }, rs + 1.2);
-  tl.to(q('#sel'), { autoAlpha: 0, duration: 0.3 }, rs + 1.7);
-
   // Keep the selection box glued to the winner's paper, and the size tag honest.
+  // (The winner is resized into the prototype frame in chapter 4; this follows it there too.)
   const box = q('#sel-box');
   const handles = [0, 1, 2, 3].map((i) => q(`#sel-h${i}`));
   const dimsBg = q('#sel-dims-bg');
@@ -235,8 +212,8 @@ export function animateBrainstorm(ctx: Ctx): void {
       hEl.setAttribute('x', String(corners[i][0] - 5.5));
       hEl.setAttribute('y', String(corners[i][1] - 5.5));
     });
-    const p = Math.max(0, Math.min(1, (w - 96) / (PHONE.w - 96)));
-    const label = `${Math.round(96 + p * (REAL.w - 96))} × ${Math.round(96 + p * (REAL.h - 96))}`;
+    const p = Math.max(0, Math.min(1, (w - 96) / (FRAME.w - 96)));
+    const label = `${Math.round(96 + p * (FRAME.realW - 96)).toLocaleString('en-US')} × ${Math.round(96 + p * (FRAME.realH - 96))}`;
     if (label !== lastLabel) {
       dims.textContent = label;
       lastLabel = label;

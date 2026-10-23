@@ -7,16 +7,17 @@ spark to someone's hand, and the whole journey is drawn in line art that animate
 
 The page is set on a design canvas (dot grid, frames, selection handles). Multiplayer cursors
 labelled **Researcher**, **Product manager**, **Designer** and **Engineer** are the characters.
-They move things around and talk in cursor-chat bubbles.
+They move things around and talk in cursor-chat bubbles. The product in the story is a generic
+EMM (enterprise mobility management) console, and the problem is device enrollment.
 
 | # | Chapter | What you see as you scroll |
 |---|---------|----------------------------|
-| 01 | **Spark** | A pen tool draws a lightbulb, anchor points and all. The cast brings in signals: user feedback, a dip in analytics, the PM's roadmap and a design audit. The signals flow into the bulb and it lights up. |
-| 02 | **Brainstorm** | The bulb shrinks into a whiteboard header ("How might we…"). Cursors stick up a dozen sticky notes, drag them into affinity clusters, lasso them and dot-vote. The camera zooms in on the winner and the designer selects it. |
-| 03 | **Wireframe** | The winning sticky is resized by its corner handle into a phone frame, and the size tag counts up to 393 × 852. A layout grid appears, the rectangle tool draws a grey-box wireframe, the team annotates it and a usability-test note goes up. |
-| 04 | **High fidelity** | Design-system cards (color, type, spacing, components, motion, icons) arrive. A paint sweep turns the wireframe into the finished screen, and the components come alive. |
-| 05 | **Build** | Spec redlines appear and an engineer asks a question in a comment, which the designer answers. Code types itself in an editor, design tokens fly from the screen into the code, and the release bar fills to "Live for 100% of users". |
-| 06 | **In people's hands** | The cursors leave and the dot grid gives way to warm daylight. A hand holds the phone, a thumb taps, "coffee" is typed and the receipt is found. Reactions come in, the success chart climbs, and a small bulb lights up: the next spark. |
+| 01 | **Spark** | A pen tool draws a lightbulb, anchor points and all. The cast brings in signals: an IT admin's ticket ("312 devices stuck on Enrolling…"), a dip in first-try enrollment, an "Enrollment revamp" roadmap item and a design audit ("14 steps to enroll one device"). They flow into the bulb and it lights up. |
+| 02 | **Brainstorm** | "How might we get every device enrolled on the first try?" Cursors stick up sticky notes, drag them into clusters (Diagnose, Set up, Scale), lasso them and dot-vote. The camera zooms in and the designer selects the winner: **One-click fixes**. |
+| 03 | **Synthesize with AI** | The notes and research (interviews, tickets, enrollment data) stream into an AI panel. It drafts themes with percentages, an insight, a concept and a goal. A designer strikes out a bad suggestion ("fewer steps, not more!") and verifies the insight against interviews. |
+| 04 | **Prototype with AI** | No wireframes. A prompt is typed (`@Brief`, `@Design system`), the winning sticky is resized into a 1440 × 900 frame, the AI lays out a skeleton and a generation sweep paints the "Enrollment health" console. The designer clicks **Renew & retry** in the prototype: 298 devices recover and the numbers update. A note says 5 of 5 admins fixed it in testing. |
+| 05 | **Build** | Spec redlines on the failure card, an engineer's question answered in the file ("Batches of 50"), code that types itself, design tokens flying into the code, a design QA checklist and a release bar. |
+| 06 | **In people's hands** | The cursors leave and the canvas becomes warm daylight. The admin's rollout reaches 1,200 of 1,200, the warehouse fleet lights up, and a worker's rugged device finishes setup: "You're all set → Start shift". The success chart climbs and a small bulb lights up: the next spark. |
 
 After the story: **What we do** (six capabilities), **How we work** (principles), a tools
 marquee and a contact section.
@@ -61,20 +62,24 @@ src/
     rig.ts                 Device and camera transforms (tweened as plain objects)
     svg.ts                 Drawing helpers: cursors, sticky notes, arrows, loops, stars
     scenes/spark.ts        Chapter 1
-    scenes/brainstorm.ts   Chapter 2 (+ resizing the sticky into a phone)
-    scenes/device.ts       The phone, its wireframe and hi-fi screen, chapters 3 and 4
+    scenes/brainstorm.ts   Chapter 2 (+ the selection box that follows the winning sticky)
+    scenes/synthesize.ts   Chapter 3, the AI synthesis panel
+    scenes/console.ts      The EMM console prototype (skeleton, generated screen, redlines)
+    scenes/prototype.ts    Chapter 4, prompt → frame → generated prototype → click-through
     scenes/build.ts        Chapter 5
-    scenes/impact.ts       Chapter 6
+    scenes/impact.ts       Chapter 6, the worker's hand, rugged device and fleet
 ```
 
 ## Common edits
 
 - **Copy:** chapter text lives in `index.html` under `.chapter`. Text inside the illustrations
-  (sticky notes, chat bubbles, code, app screen) lives in the scene files.
+  (sticky notes, chat bubbles, the AI draft, code, the console and device screens) lives in the scene files.
+- **Product name:** the console is labelled "EMM Console" / "EMM". Search `console.ts` for those
+  strings to use your own product name.
 - **Pacing:** `src/story/timing.ts` sets where each chapter starts. Total scroll length is
   `timeline duration × 11% of the viewport height` (see `unit()` in `story/index.ts`).
 - **Colors and fonts:** all tokens are at the top of `src/styles.css`, with dark-mode values
-  below them. The fictional app on the phone uses the `--app-*` tokens.
+  below them. The console and the rugged device use the `--app-*` tokens and `--rugged`.
 - **Characters:** cursor names and their chat lines are in `CAST` in `story/index.ts`.
 - **Contact:** replace `design@example.com` in `index.html`.
 
