@@ -1,0 +1,28 @@
+<!-- @dsCard group="Canvas" height=260 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="../../tokens.css"><link rel="stylesheet" href="../../components.css"><title>LineArt — preview</title></head>
+<body class="cv-canvas">
+<div class="cv-stage" style="align-items:center;gap:40px">
+  <svg class="cv-art" viewBox="480 160 240 330" width="150" height="206" aria-hidden="true">
+    <circle cx="600" cy="285" r="120" style="fill:var(--glow);opacity:.35"/>
+    <path class="fill-surface" d="M556 410 C556 372 500 352 500 285 C500 230 545 185 600 185 C655 185 700 230 700 285 C700 352 644 372 644 410 Z"/>
+    <path class="fill-glow" d="M556 410 C556 372 500 352 500 285 C500 230 545 185 600 185 C655 185 700 230 700 285 C700 352 644 372 644 410 Z"/>
+    <path class="ln" d="M556 410 C556 372 500 352 500 285 C500 230 545 185 600 185 C655 185 700 230 700 285 C700 352 644 372 644 410"/>
+    <path class="ln-accent draw" d="M580 410 V352 C580 330 596 328 594 346 C592 362 608 362 606 346 C604 328 620 330 620 352 V410"/>
+    <rect class="ln" x="552" y="414" width="96" height="16" rx="8"/><rect class="ln" x="558" y="434" width="84" height="16" rx="8"/>
+    <path class="ln" d="M578 456 C584 474 616 474 622 456"/>
+  </svg>
+  <div class="cv-stack" style="gap:6px;font:500 12px/1.5 var(--font-mono);color:var(--ink-2)">
+    <span><svg width="40" height="8" aria-hidden="true"><path d="M2 4H38" style="stroke:var(--ink);stroke-width:2.5;stroke-linecap:round"/></svg> stroke-ink · ink</span>
+    <span><svg width="40" height="8" aria-hidden="true"><path d="M2 4H38" style="stroke:var(--accent);stroke-width:3;stroke-linecap:round"/></svg> stroke-accent · accent</span>
+    <span><svg width="40" height="8" aria-hidden="true"><path d="M2 4H38" style="stroke:var(--ink-3);stroke-width:1.75;stroke-linecap:round"/></svg> stroke-soft · ink-3</span>
+  </div>
+</div>
+<style>
+  .draw { stroke-dasharray: 260; stroke-dashoffset: 260; animation: draw 2.4s ease-in-out 0.3s infinite alternate; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { .draw { animation: none; stroke-dashoffset: 0; } }
+</style>
+</body>
+</html>

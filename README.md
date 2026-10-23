@@ -22,6 +22,12 @@ EMM (enterprise mobility management) console, and the problem is device enrollme
 After the story: **What we do** (six capabilities), **How we work** (principles), a tools
 marquee and a contact section.
 
+## Design system
+
+The theme is documented as **Design Hub Canvas** in [`design-system/`](design-system/README.md): guidelines, tokens
+(`tokens.json` and an importable `tokens.css`), component styles (`components.css`), a README and live
+preview per component, and the logo and icons. Use it to build Design Hub pages in the same style.
+
 ## Tech stack
 
 | Tool | Why |
